@@ -8,7 +8,8 @@ import {
   TodayButton,
   DayView,
 } from '@devexpress/dx-react-scheduler-material-ui';
-import WestIcon from '@mui/icons-material/West';
+import EditIcon from '@mui/icons-material/Edit';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { Button, Paper, Stack, Typography } from '@mui/material';
 import { ViewState } from '@devexpress/dx-react-scheduler';
 import FrostedBackground from '../features/Generics/FrostedBackground';
@@ -22,52 +23,47 @@ const SchedulerPage = () => {
   const [schedulerData, setSchedulerData] = useState([]);
   const isLoggedIn = useIsLoggedIn();
   const navigate = useNavigate();
+
+  // Customized appointment with cancel button in Day view
   const CustomAppointment = ({ children, data, ...restProps }) => {
     const handleClick = () => {
-      setCurrentDate(data?.startDate); // Change to the clicked day
+      setCurrentDate(data.startDate);
       setCurrentViewName('Day');
     };
-
-    const handleCancelAppointment = async (appointmentId) => {
-      if (window.confirm(`Are you sure you want to cancel the appointment?`)) {
+    const handleCancel = async (id) => {
+      if (window.confirm('Cancel this appointment?')) {
         try {
-          const result = await cancelAppointment(appointmentId);
-
-          if (result.success) {
-            alert('Appointment Cancelled Successfully');
-            // Optionally, refresh appointments data
-            setSchedulerData((prevData) =>
-              prevData.filter((appointment) => appointment.id !== appointmentId)
-            );
-          } else {
-            alert(`Error occured, Please try to cancel the appointment again`);
-          }
-        } catch (error) {
-          console.log(`An error occurred: ${error.message}`);
+          const res = await cancelAppointment(id);
+          if (res.success) {
+            setSchedulerData((prev) => prev.filter((appt) => appt.id !== id));
+          } else throw new Error('Cancellation failed');
+        } catch {
+          alert('Failed to cancel.');
         }
       }
     };
-
     return (
       <Appointments.Appointment {...restProps} onClick={handleClick}>
-        <div style={{ position: 'relative', padding: '10px' }}>
+        <div style={{ position: 'relative', padding: 12 }}>
           {children}
           {currentViewName === 'Day' && (
             <Button
-              size='small'
-              color='error'
-              variant='contained'
-              style={{
+              size="small"
+              color="error"
+              variant="contained"
+              sx={{
                 position: 'absolute',
-                top: '5px',
-                right: '5px',
+                top: 8,
+                right: 8,
+                textTransform: 'none',
+                fontSize: '0.75rem',
               }}
               onClick={(e) => {
-                e.stopPropagation(); // Prevent triggering the appointment click event
-                handleCancelAppointment(data?.id);
+                e.stopPropagation();
+                handleCancel(data.id);
               }}
             >
-              Cancel appointment
+              Cancel
             </Button>
           )}
         </div>
@@ -75,84 +71,103 @@ const SchedulerPage = () => {
     );
   };
 
+  // Clickable month-cell to switch to Day view
   const CustomTimeTableCell = ({ startDate, ...restProps }) => {
-    const handleDayClick = () => {
-      console.log(startDate);
-      setCurrentDate(startDate); // Change to the clicked day
-      setCurrentViewName('Day'); // Switch to Day view
+    const handleCellClick = () => {
+      setCurrentDate(startDate);
+      setCurrentViewName('Day');
     };
-
     return (
       <MonthView.TimeTableCell
         {...restProps}
         startDate={startDate}
-        onClick={handleDayClick}
+        onClick={handleCellClick}
         style={{ cursor: 'pointer' }}
       />
     );
   };
-  useEffect(() => {
-    getAllAppointments(isLoggedIn).then((data) => {
-      const updatedData = data?.data?.map((appointment) => ({
-        ...appointment,
-        title: `${appointment.clientName} - ${appointment.service}`, // Customize the title as needed
-      }));
 
-      console.log(updatedData);
-      setSchedulerData(updatedData);
+  // Fetch and shape appointments once on mount / login change
+  useEffect(() => {
+    getAllAppointments(isLoggedIn).then(({ data }) => {
+      setSchedulerData(
+        data.map((appt) => ({
+          ...appt,
+          title: `${appt.clientName} - ${appt.service}`,
+        }))
+      );
     });
-  }, []);
+  }, [isLoggedIn]);
+
   return (
-    <Stack alignItems={'center'} spacing={1} sx={{ height: '80vh' }}>
+    <Stack alignItems="center" spacing={2} sx={{ position: 'relative', height: '80vh' }}>
       <FrostedBackground>
+        {/* Edit Business Button */}
+        <Button
+          disableElevation
+          startIcon={<EditIcon />}
+          endIcon={<ArrowForwardIcon />}
+          onClick={() => navigate(`/signup/${isLoggedIn}`)}
+          sx={{
+            mt: 4,
+            px: 4,
+            py: 1.5,
+            borderRadius: '30px',
+            background: 'linear-gradient(90deg, #667eea 0%, #764ba2 100%)',
+            backgroundSize: '200% 200%',
+            color: '#fff',
+            textTransform: 'none',
+            fontSize: '1rem',
+            fontWeight: 500,
+            boxShadow: '0 4px 20px rgba(0,0,0,0.2)',
+            transition: 'all 0.3s ease',
+            '&:hover': {
+              backgroundPosition: '100% 0%',
+              transform: 'translateY(-2px)',
+              boxShadow: '0 6px 30px rgba(0,0,0,0.3)',
+            },
+          }}
+        >
+          Edit Business
+        </Button>
+
+        {/* Back to Month View */}
+        {currentViewName !== 'Month' && (
           <Button
-            variant='contained'
-            sx={{ backgroundColor: 'blue', borderRadius: '30px' }}
-            onClick={() => {
-              navigate(`/signup/${isLoggedIn}`);
+            onClick={() => setCurrentViewName('Month')}
+            variant="outlined"
+            sx={{
+              position: 'absolute',
+              top: 16,
+              right: 24,
+              borderRadius: '20px',
+              textTransform: 'none',
             }}
           >
-            <Typography variant='h5' sx={{ textTransform: 'none' }}>Edit Business</Typography>
+            Monthly View
           </Button>
-          <br></br>
+        )}
 
-          {currentViewName !== 'Month' && (
-            <Button
-              sx={{
-                position: 'absolute',
-                right: '60px',
-                top: '30px',
-                zIndex: '9999',
-              }}
-              onClick={() => {
-                setCurrentViewName('Month');
-              }}
-              variant='contained'
-            >
-              Monthly view{' '}
-            </Button>
-          )}
-          <Stack sx={{ backgroundColor: 'white', overflowY: 'auto' }}>
-            <Scheduler data={schedulerData}>
-              <ViewState
-                currentDate={currentDate} // Dynamically bind currentDate
-                onCurrentDateChange={(newDate) => setCurrentDate(newDate)} // Update state when toolbar changes the date
-                currentViewName={currentViewName}
-                onCurrentViewNameChange={(newViewName) =>
-                  setCurrentViewName(newViewName)
-                } // Update state when the view changes
-              />
-              {currentViewName === 'Month' ? (
-                <MonthView timeTableCellComponent={CustomTimeTableCell} />
-              ) : (
-                <DayView startDayHour={6} endDayHour={22} />
-              )}{' '}
-              <Toolbar />
-              <DateNavigator />
-              <TodayButton />
-              <Appointments appointmentComponent={CustomAppointment} />
-            </Scheduler>
-          </Stack>
+        {/* Calendar */}
+        <Paper sx={{ mt: 6, width: '90%', height: '100%', overflowY: 'auto' }}>
+          <Scheduler data={schedulerData} height={600}>
+            <ViewState
+              currentDate={currentDate}
+              onCurrentDateChange={setCurrentDate}
+              currentViewName={currentViewName}
+              onCurrentViewNameChange={setCurrentViewName}
+            />
+            {currentViewName === 'Month' ? (
+              <MonthView timeTableCellComponent={CustomTimeTableCell} />
+            ) : (
+              <DayView startDayHour={6} endDayHour={22} />
+            )}
+            <Toolbar />
+            <DateNavigator />
+            <TodayButton />
+            <Appointments appointmentComponent={CustomAppointment} />
+          </Scheduler>
+        </Paper>
       </FrostedBackground>
     </Stack>
   );

@@ -1,27 +1,24 @@
 import React from 'react';
 import { Facebook, Instagram, WhatsApp } from '@mui/icons-material';
-import { Box,IconButton,Container,Typography,List,ListItem,ListItemText,Button} from '@mui/material';
+import { Box, IconButton, Container, Typography, List, ListItem, ListItemText, Button, Tooltip } from '@mui/material';
 
 export const BusinessOwnerContainer = ({ children, sx }) => (
-  <Container>
+  <Container maxWidth="md" sx={{ p: 0 }}>
     <Box
       sx={{
         textAlign: 'center',
-        mt: 4,
-        p: 2,
-        width: '70%',
-        minHeight: '20vh',
-        backdropFilter: 'blur(10px)',
-        borderRadius: '20px',
-        backgroundColor: '#FFFFFF90',
-        boxShadow: 2,
+        mt: 6,
+        p: { xs: 2, md: 4 },
+        width: { xs: '95%', md: '75%' },
+        minHeight: '24vh',
+        backdropFilter: 'blur(14px)',
+        borderRadius: '28px',
+        background: 'rgba(255,255,255,0.8)',
+        boxShadow: '0 8px 32px rgba(102,126,234,0.11), 0 1.5px 4px rgba(0,0,0,0.06)',
         overflowY: 'auto',
         margin: 'auto',
-        '&::-webkit-scrollbar': {
-          display: 'none',
-        },
-        '-ms-overflow-style': 'none',
-        'scrollbar-width': 'none',
+        border: '1px solid #f4f6fb',
+        ...sx,
       }}
     >
       {children}
@@ -29,6 +26,7 @@ export const BusinessOwnerContainer = ({ children, sx }) => (
   </Container>
 );
 
+// Modernized Social Media Bar
 export const SocialMediaIcons = ({
   facebook,
   instagram,
@@ -39,119 +37,156 @@ export const SocialMediaIcons = ({
 }) => {
   const { city, street, houseNumber } = address || {};
   const addressString = `${street || ''} ${houseNumber || ''}, ${city || ''}`;
+  const iconStyle = {
+    mx: 1,
+    bgcolor: 'white',
+    border: '1.5px solid #e3e8f0',
+    boxShadow: '0 2px 8px rgba(118,75,162,0.06)',
+    color: '#667eea',
+    '&:hover': {
+      bgcolor: '#f3f4fa',
+      color: '#764ba2',
+      transform: 'scale(1.12)',
+    },
+    transition: 'all 0.18s cubic-bezier(.4,0,.2,1)'
+  };
+
   return (
-    <Box display='flex' justifyContent='center' gap={1}>
+    <Box display="flex" justifyContent="center" alignItems="center" gap={2} sx={{ mb: 1 }}>
       {facebook && (
-        <IconButton
-          color='primary'
-          href={`https://www.facebook.com/${encodeURIComponent(facebook)}`}
-          target='_blank'
-          rel='noopener noreferrer'
-          aria-label='Facebook'
-        >
-          <Facebook />
-        </IconButton>
+        <Tooltip title="Facebook">
+          <IconButton
+            href={`https://www.facebook.com/${encodeURIComponent(facebook)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            sx={iconStyle}
+          >
+            <Facebook fontSize="medium" />
+          </IconButton>
+        </Tooltip>
       )}
       {whatsApp && (
-        <IconButton
-          sx={{ color: 'green' }}
-          href={`https://wa.me/${whatsApp}/?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A9%D7%9E%D7%95%D7%A2%20%D7%A2%D7%9C%20%D7%A4%D7%A8%D7%98%D7%99%D7%9D%20%D7%91%D7%A0%D7%95%D7%92%D7%A2%20%D7%9C%D7%A2%D7%A1%D7%A7%20%D7%A9%D7%9C%D7%9A`}
-          target='_blank'
-          rel='noopener noreferrer'
-          aria-label='Instagram'
-        >
-          <WhatsApp />
-        </IconButton>
+        <Tooltip title="WhatsApp">
+          <IconButton
+            sx={{ ...iconStyle, color: '#25d366', border: '1.5px solid #d4f5e9' }}
+            href={`https://wa.me/${whatsApp}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <WhatsApp fontSize="medium" />
+          </IconButton>
+        </Tooltip>
       )}
-
       {instagram && (
-        <IconButton
-          color='secondary'
-          href={`https://www.instagram.com/${encodeURIComponent(instagram)}`}
-          target='_blank'
-          rel='noopener noreferrer'
-          aria-label='Instagram'
-        >
-          <Instagram />
-        </IconButton>
+        <Tooltip title="Instagram">
+          <IconButton
+            href={`https://www.instagram.com/${encodeURIComponent(instagram)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            sx={{ ...iconStyle, color: '#e1306c', border: '1.5px solid #fde3ef' }}
+          >
+            <Instagram fontSize="medium" />
+          </IconButton>
+        </Tooltip>
       )}
-      { addressString && (
-        <IconButton
-          href={`https://waze.com/ul?q=${encodeURIComponent(addressString)}`}
-          target='_blank'
-          rel='noopener noreferrer'
-          aria-label='Waze'
-        >
-          <img
-            src='../static/socialMediaIcons/Waze_icon.png'
-            alt='Waze'
-            style={{ width: 26, height: 26 }}
-          />
-        </IconButton>
+      {addressString && (
+        <Tooltip title="Navigate in Waze">
+          <IconButton
+            href={`https://waze.com/ul?q=${encodeURIComponent(addressString)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            sx={iconStyle}
+          >
+            <img src="/static/socialMediaIcons/Waze_icon.png" alt="Waze" width={24} height={24} />
+          </IconButton>
+        </Tooltip>
       )}
-      { addressString && (
-        <IconButton
-          color='secondery'
-          href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-            addressString
-          )}`}
-          target='_blank'
-          rel='noopener noreferrer'
-          aria-label='Google Maps'
-        >
-          <img
-            src='../static/socialMediaIcons/GoogleMapsIcon.png'
-            alt='Waze'
-            style={{ width: 26, height: 26 }}
-          />
-        </IconButton>
+      {addressString && (
+        <Tooltip title="Open in Google Maps">
+          <IconButton
+            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(addressString)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            sx={iconStyle}
+          >
+            <img src="/static/socialMediaIcons/GoogleMapsIcon.png" alt="Google Maps" width={24} height={24} />
+          </IconButton>
+        </Tooltip>
       )}
       {phone && (
-        <IconButton color='primary' href={`tel:${phone}`} aria-label='Phone'>
-          <Typography variant='body2'>Call</Typography>
-        </IconButton>
+        <Tooltip title="Call">
+          <IconButton
+            href={`tel:${phone}`}
+            sx={iconStyle}
+          >
+            <Typography fontWeight={600} fontSize="0.92rem" color="inherit">Call</Typography>
+          </IconButton>
+        </Tooltip>
       )}
     </Box>
   );
 };
 
 export const AboutUs = ({ aboutUs }) => (
-  <div>
-    <Typography variant='h5' gutterBottom>
+  <Box sx={{ my: 2 }}>
+    <Typography variant="h5" gutterBottom sx={{
+      fontWeight: 700,
+      letterSpacing: '0.03em',
+      color: 'primary.main',
+      mb: 1,
+    }}>
       About Us
     </Typography>
     <List
-      style={{ direction: 'rtl', textAlign: 'center', padding: 0, margin: 0 }}
+      sx={{
+        direction: 'rtl',
+        textAlign: 'center',
+        px: 0,
+        py: 0,
+        m: 0,
+        bgcolor: 'transparent',
+      }}
     >
-      {aboutUs.map((description, index) => (
+      {aboutUs.map((desc, idx) => (
         <ListItem
-          key={index}
-          style={{ justifyContent: 'center', paddingTop: 0, paddingBottom: 0 }}
+          key={idx}
+          sx={{
+            justifyContent: 'center',
+            py: 0.5,
+            px: 0,
+            bgcolor: 'transparent',
+          }}
         >
-          <ListItemText
-            primary={description}
-            style={{ textAlign: 'center', margin: 0, lineHeight: '1.2' }}
-          />
+          <ListItemText primary={desc} sx={{ textAlign: 'center', m: 0, lineHeight: 1.5 }} />
         </ListItem>
       ))}
     </List>
-  </div>
+  </Box>
 );
 
 export const ScheduleButton = ({ onClick, text }) => (
   <Button
-    variant='contained'
-    color='primary'
-    style={{
-      marginTop: '20px',
-      fontSize: '16px',
-      fontWeight: 'bold',
-      textTransform: 'none',
-      padding: '10px 20px',
-      borderRadius: '30px',
-      boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.2)',
-    }}
     onClick={onClick}
+    sx={{
+      mt: 3,
+      py: 1.5,
+      px: 5,
+      borderRadius: '32px',
+      background: 'linear-gradient(90deg, #667eea, #764ba2 90%)',
+      color: '#fff',
+      fontWeight: 700,
+      fontSize: '1.1rem',
+      textTransform: 'none',
+      boxShadow: '0 6px 18px rgba(102,126,234,0.15)',
+      letterSpacing: '0.03em',
+      transition: 'all 0.22s cubic-bezier(.4,0,.2,1)',
+      '&:hover': {
+        background: 'linear-gradient(90deg, #764ba2 20%, #667eea 100%)',
+        transform: 'translateY(-2px) scale(1.04)',
+        boxShadow: '0 10px 32px rgba(102,126,234,0.22)',
+      },
+    }}
+    disableElevation
   >
     {text}
   </Button>
