@@ -10,12 +10,11 @@ import {
   FormControlLabel,
   CircularProgress,
   Tooltip,
-  Snackbar,
-  Alert,
   Paper,
   Box,
   Divider,
   Collapse,
+  Alert,
 } from '@mui/material';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
@@ -241,42 +240,6 @@ const SignUpPage = () => {
             overflow: 'hidden',
           }}
         >
-          {/* Success or Error Message */}
-          <Collapse in={alertOpen}>
-            <Alert
-              severity={alertSeverity}
-              variant="filled"
-              sx={{
-                mb: 3,
-                fontSize: '1.07rem',
-                borderRadius: 2,
-                fontWeight: 600,
-                letterSpacing: '0.01em'
-              }}
-              onClose={() => setAlertOpen(false)}
-            >
-              {alertMessage}
-            </Alert>
-          </Collapse>
-          {showSuccess && (
-            <Stack alignItems="center" mb={2}>
-              <Typography
-                variant="h5"
-                sx={{
-                  fontWeight: 800,
-                  color: 'green',
-                  mb: 0.5,
-                  letterSpacing: '.01em'
-                }}
-              >
-                Signup Success!
-              </Typography>
-              <Typography variant="subtitle1" color="textSecondary">
-                Welcome to BizQ. You’ll be redirected shortly.
-              </Typography>
-            </Stack>
-          )}
-
           <Stack spacing={4}>
             <Typography
               variant="h3"
@@ -527,8 +490,58 @@ const SignUpPage = () => {
               </Button>
             </Stack>
 
-            {/* SUBMIT BUTTON */}
-            <Stack alignItems="center" width="100%" mt={1}>
+            {/* Modern Alert + Submit Button */}
+            <Stack alignItems="center" width="100%" mt={3} spacing={2}>
+              <Collapse in={alertOpen}>
+                <Alert
+                  severity={alertSeverity}
+                  variant="filled"
+                  icon={alertSeverity === 'success' ? <span role="img" aria-label="success">🎉</span> : <span role="img" aria-label="error">⚠️</span>}
+                  sx={{
+                    mb: 0,
+                    width: 350,
+                    maxWidth: '95vw',
+                    boxShadow: '0 4px 24px 0 #764ba222',
+                    borderRadius: 3,
+                    fontSize: '1.12rem',
+                    fontWeight: 600,
+                    letterSpacing: '0.01em',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    textAlign: 'center',
+                    background:
+                      alertSeverity === 'success'
+                        ? 'linear-gradient(90deg,#96e6a1 0%,#d4fc79 100%)'
+                        : 'linear-gradient(90deg,#ffd6e0 0%,#cbb4d4 100%)',
+                    color: '#222',
+                    transition: 'all 0.4s cubic-bezier(.5,0,.2,1)',
+                    animation: alertOpen ? 'fadeInAlert 0.55s' : 'none'
+                  }}
+                  onClose={() => setAlertOpen(false)}
+                >
+                  {alertMessage}
+                </Alert>
+              </Collapse>
+
+              {showSuccess && (
+                <Stack alignItems="center" mb={2}>
+                  <Typography
+                    variant="h5"
+                    sx={{
+                      fontWeight: 800,
+                      color: 'green',
+                      mb: 0.5,
+                      letterSpacing: '.01em'
+                    }}
+                  >
+                    Signup Success!
+                  </Typography>
+                  <Typography variant="subtitle1" color="textSecondary">
+                    Welcome to BizQ. You’ll be redirected shortly.
+                  </Typography>
+                </Stack>
+              )}
+
               <Button
                 variant="contained"
                 size="large"

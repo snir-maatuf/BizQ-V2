@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { db } from '../firebase';
 import { collection, query, where, getDocs } from 'firebase/firestore';
@@ -19,28 +19,38 @@ import { isHebrew } from '../utils/common';
 const FilteredBusinessesPage = () => {
   const { category } = useParams();
   const navigate = useNavigate();
+
   const [businesses, setBusinesses] = useState([]);
   const [filteredBusinesses, setFilteredBusinesses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
-  const [manualCity, setManualCity] = useState(''); // Manual city input
+
+  // עיר של המשתמש (מזוהה אוטומטית)
+  const [userCity, setUserCity] = useState('');
+  const [cityFilterActive, setCityFilterActive] = useState(false);
   const [userCityText, setUserCityText] = useState('');
+  const [manualCity, setManualCity] = useState('');
 
   useEffect(() => {
     const fetchLocationAndBusinesses = async () => {
       setLoading(true);
+
+      // 1. זיהוי עיר (אם אפשר)
       try {
-        // Fetch user's city from IP and set it as the default manualCity
         const location = await getLocationByIP();
         let city = location?.city || '';
         city = city.toLowerCase();
-        setManualCity(city);
-        setUserCityText(`Showing results for your city: ${city}`);
-        if (city == '') {
-          setUserCityText(`Couldn't find your location`);
-        }
+        setUserCity(city);
+        setUserCityText(city
+          ? `זוהתה העיר שלך: ${city}`
+          : `לא הצלחנו לזהות את מיקומך`);
+      } catch (err) {
+        setUserCity('');
+        setUserCityText(`לא הצלחנו לזהות את מיקומך`);
+      }
 
-        // Fetch businesses from Firestore
+      // 2. שליפת עסקים
+      try {
         const businessesRef = collection(db, 'businesses');
         let q;
         if (category && category !== 'all') {
@@ -50,56 +60,67 @@ const FilteredBusinessesPage = () => {
         }
 
         const querySnapshot = await getDocs(q);
-        const fetchedBusinesses = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
+        const fetchedBusinesses = querySnapshot.docs.map((doc) => {
+          const data = doc.data();
+          return {
+            id: doc.id,
+            businessName: data.businessName ?? '',
+            description: data.description ?? '',
+            city: data.city ?? '',
+            ...data,
+          };
+        });
 
         setBusinesses(fetchedBusinesses);
       } catch (error) {
-        console.error('Error fetching businesses or location:', error);
+        console.error('Error fetching businesses:', error);
       } finally {
         setLoading(false);
       }
     };
 
     fetchLocationAndBusinesses();
+    // eslint-disable-next-line
   }, [category]);
 
-  useEffect(() => {
-    if (businesses.length > 0) {
-      filterBusinesses(searchTerm, manualCity);
-    }
-  }, [businesses, searchTerm, manualCity]);
+  // סינון עסקים - תמיד עובד על פי הסטייט הנוכחי
+  const filterBusinesses = useCallback(() => {
+    const search = (searchTerm || '').toLowerCase();
+    const cityToFilter =
+      cityFilterActive && userCity
+        ? userCity.toLowerCase()
+        : (manualCity || '').toLowerCase();
 
-  const handleSearch = (event) => {
-    const value = event.target.value.toLowerCase();
-    setSearchTerm(value);
-    filterBusinesses(value, manualCity);
-  };
-
-  const handleLocationInput = (event) => {
-    setUserCityText('');
-    const value = event.target.value.toLowerCase();
-    setManualCity(value);
-    filterBusinesses(searchTerm, value);
-  };
-
-  const filterBusinesses = (search, city) => {
     const filtered = businesses.filter((business) => {
-      const matchesSearch =
-        business.businessName.toLowerCase().includes(search) ||
-        (business.description &&
-          business.description.toLowerCase().includes(search));
-      const matchesCity =
-        !city || // No manual city filter applied
-        (business.city &&
-          business.city.toLowerCase().includes(city));
+      const name = (business.businessName || '').toLowerCase();
+      const desc = (business.description || '').toLowerCase();
+      const cityName = (business.city || '').toLowerCase();
+
+      const matchesSearch = name.includes(search) || desc.includes(search);
+      const matchesCity = !cityToFilter || cityName.includes(cityToFilter);
 
       return matchesSearch && matchesCity;
     });
 
     setFilteredBusinesses(filtered);
+  }, [businesses, searchTerm, manualCity, cityFilterActive, userCity]);
+
+  // עדכון סינון בכל שינוי רלוונטי
+  useEffect(() => {
+    filterBusinesses();
+  }, [filterBusinesses]);
+
+  // פעולות משתמש
+  const handleSearch = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const handleLocationInput = (event) => {
+    setManualCity(event.target.value);
+  };
+
+  const handleCityFilterToggle = () => {
+    setCityFilterActive((prev) => !prev);
   };
 
   const navigateToBusiness = (id) => {
@@ -107,40 +128,47 @@ const FilteredBusinessesPage = () => {
   };
 
   if (loading)
-  return (
-    <Stack
-      alignItems="center"
-      justifyContent="center"
-      sx={{ height: '80vh' }}
-    >
-      <FrostedBackground>
-        <Stack
-          alignItems="center"
-          justifyContent="center"
-          sx={{ height: '100%' }}
-        >
-          <CircularProgress />
-        </Stack>
-      </FrostedBackground>
-    </Stack>
-  );
+    return (
+      <Stack
+        alignItems="center"
+        justifyContent="center"
+        sx={{ height: '80vh' }}
+      >
+        <FrostedBackground>
+          <Stack
+            alignItems="center"
+            justifyContent="center"
+            sx={{ height: '100%' }}
+          >
+            <CircularProgress />
+          </Stack>
+        </FrostedBackground>
+      </Stack>
+    );
 
   return (
     <Stack alignItems="center" sx={{ height: '80vh' }}>
       <FrostedBackground>
         <Stack spacing={3}>
-          {/* Show user city */}
-          {category !== 'all' && (
-            <Typography
-              variant="h6"
-              align="center"
-              sx={{ marginBottom: '10px' }}
-            >
-              {userCityText}
-            </Typography>
+          {/* כפתור הפעלת סינון לעיר שלי */}
+          {userCity && (
+            <Stack direction="row" spacing={2} alignItems="center" justifyContent="center">
+              <Typography>
+                {cityFilterActive
+                  ? `מציג תוצאות לעיר שלך: ${userCity}`
+                  : `ניתן לסנן לעיר שלך: ${userCity}`}
+              </Typography>
+              <IconButton
+                onClick={handleCityFilterToggle}
+                color={cityFilterActive ? "primary" : "default"}
+                aria-label="סנן לפי העיר שלי"
+              >
+                <SearchIcon />
+              </IconButton>
+            </Stack>
           )}
 
-          {/* Search and Location Input */}
+          {/* שדה חיפוש + שדה עיר ידני */}
           <Stack
             direction="row"
             alignItems="center"
@@ -153,10 +181,9 @@ const FilteredBusinessesPage = () => {
               marginBottom: '20px',
             }}
           >
-            {/* Search Bar */}
             <TextField
               fullWidth
-              placeholder="Search by name or description"
+              placeholder="חפש לפי שם או תיאור"
               value={searchTerm}
               onChange={handleSearch}
               sx={{
@@ -166,12 +193,13 @@ const FilteredBusinessesPage = () => {
               }}
             />
 
-            {/* Manual City Input */}
+            {/* שדה עיר ידני */}
             <TextField
               fullWidth
-              placeholder="Enter a city"
+              placeholder="הכנס עיר"
               value={manualCity}
               onChange={handleLocationInput}
+              disabled={cityFilterActive} // מנטרלים אם הסינון לעיר שלי פעיל
               sx={{
                 '& .MuiOutlinedInput-root': {
                   borderRadius: '20px',
@@ -183,7 +211,7 @@ const FilteredBusinessesPage = () => {
             </IconButton>
           </Stack>
 
-          {/* Filtered Businesses */}
+          {/* רשימת העסקים */}
           <Stack
             sx={{
               width: '1000px',
@@ -240,7 +268,7 @@ const FilteredBusinessesPage = () => {
                 ))
               ) : (
                 <Typography variant="body1" align="center">
-                  No matching businesses found.
+                  לא נמצאו עסקים מתאימים.
                 </Typography>
               )}
             </Stack>
