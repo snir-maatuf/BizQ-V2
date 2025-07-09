@@ -16,5 +16,5 @@
 .env.test.local
 .env.production.local
 .vscode
-firebase.jsx
 jsconfig.json
+frontend/.env
