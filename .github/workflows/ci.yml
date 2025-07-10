@@ -45,7 +45,7 @@ jobs:
         run: npm install -g netlify-cli
 
       - name: Deploy to Netlify
-        run: netlify deploy --dir=dist --prod --auth ${{ secrets.NETLIFY_AUTH_TOKEN }} --site ${{ secrets.NETLIFY_SITE_ID }}
+        run: netlify deploy --dir=frontend/dist --prod --auth ${{ secrets.NETLIFY_AUTH_TOKEN }} --site ${{ secrets.NETLIFY_SITE_ID }}
 
   backend:
     runs-on: ubuntu-latest
