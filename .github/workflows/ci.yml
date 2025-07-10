@@ -46,9 +46,9 @@ jobs:
 
       - name: Deploy to Netlify
         if: env.ENABLE_DEPLOY == 'true'
-        run: netlify deploy --dir=dist --prod --auth ${{ secrets.NETLIFY_AUTH_TOKEN }} --site ${{ secrets.NETLIFY_SITE_ID }}
         env: 
           ENABLE_DEPLOY: ${{ secrets.ENABLE_NETLIFY_DEPLOY }}
+        run: netlify deploy --dir=dist --prod --auth ${{ secrets.NETLIFY_AUTH_TOKEN }} --site ${{ secrets.NETLIFY_SITE_ID }}
 
   backend:
     runs-on: ubuntu-latest
