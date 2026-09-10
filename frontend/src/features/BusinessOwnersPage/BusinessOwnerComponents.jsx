@@ -1,23 +1,23 @@
 import React from 'react';
 import { Facebook, Instagram, WhatsApp } from '@mui/icons-material';
 import { Box, IconButton, Container, Typography, List, ListItem, ListItemText, Button, Tooltip } from '@mui/material';
+import { tokens } from '../../theme';
 
 export const BusinessOwnerContainer = ({ children, sx }) => (
   <Container maxWidth="md" sx={{ p: 0 }}>
     <Box
       sx={{
         textAlign: 'center',
-        mt: 6,
-        p: { xs: 2, md: 4 },
-        width: { xs: '95%', md: '75%' },
+        mt: { xs: 3, md: 6 },
+        p: { xs: 2.5, md: 4 },
+        width: { xs: '94%', md: '80%' },
         minHeight: '24vh',
-        backdropFilter: 'blur(14px)',
-        borderRadius: '28px',
-        background: 'rgba(255,255,255,0.8)',
-        boxShadow: '0 8px 32px rgba(102,126,234,0.11), 0 1.5px 4px rgba(0,0,0,0.06)',
+        borderRadius: tokens.radius.lg,
+        backgroundColor: tokens.paper,
+        border: `1px solid ${tokens.line}`,
+        boxShadow: '0 1px 2px rgba(20,18,12,0.04), 0 12px 32px rgba(20,18,12,0.06)',
         overflowY: 'auto',
         margin: 'auto',
-        border: '1px solid #f4f6fb',
         ...sx,
       }}
     >
@@ -38,17 +38,15 @@ export const SocialMediaIcons = ({
   const { city, street, houseNumber } = address || {};
   const addressString = `${street || ''} ${houseNumber || ''}, ${city || ''}`;
   const iconStyle = {
-    mx: 1,
-    bgcolor: 'white',
-    border: '1.5px solid #e3e8f0',
-    boxShadow: '0 2px 8px rgba(118,75,162,0.06)',
-    color: '#667eea',
+    mx: 0.5,
+    bgcolor: tokens.paper,
+    border: `1px solid ${tokens.line}`,
+    color: tokens.green,
     '&:hover': {
-      bgcolor: '#f3f4fa',
-      color: '#764ba2',
-      transform: 'scale(1.12)',
+      bgcolor: tokens.greenSoft,
+      color: tokens.greenDark,
     },
-    transition: 'all 0.18s cubic-bezier(.4,0,.2,1)'
+    transition: 'background-color 0.18s ease, color 0.18s ease',
   };
 
   return (
@@ -167,26 +165,10 @@ export const AboutUs = ({ aboutUs }) => (
 export const ScheduleButton = ({ onClick, text }) => (
   <Button
     onClick={onClick}
-    sx={{
-      mt: 3,
-      py: 1.5,
-      px: 5,
-      borderRadius: '32px',
-      background: 'linear-gradient(90deg, #667eea, #764ba2 90%)',
-      color: '#fff',
-      fontWeight: 700,
-      fontSize: '1.1rem',
-      textTransform: 'none',
-      boxShadow: '0 6px 18px rgba(102,126,234,0.15)',
-      letterSpacing: '0.03em',
-      transition: 'all 0.22s cubic-bezier(.4,0,.2,1)',
-      '&:hover': {
-        background: 'linear-gradient(90deg, #764ba2 20%, #667eea 100%)',
-        transform: 'translateY(-2px) scale(1.04)',
-        boxShadow: '0 10px 32px rgba(102,126,234,0.22)',
-      },
-    }}
+    variant="contained"
+    color="primary"
     disableElevation
+    sx={{ mt: 3, py: 1.4, px: 4, fontSize: '1rem', borderRadius: tokens.radius.pill }}
   >
     {text}
   </Button>

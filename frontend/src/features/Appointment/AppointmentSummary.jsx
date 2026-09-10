@@ -5,6 +5,7 @@ import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import PhoneIphoneOutlinedIcon from '@mui/icons-material/PhoneIphoneOutlined';
+import { tokens } from '../../theme';
 
 const AppointmentSummary = ({
   selectedOption,
@@ -54,42 +55,22 @@ const AppointmentSummary = ({
   };
 
   return (
-    <Stack
-      alignItems="center"
-      justifyContent="center"
-      sx={{
-        minHeight: '70vh',
-        width: '100%',
-        background: 'linear-gradient(135deg,#f0f4ff 0%,#fef2f8 100%)',
-      }}
-    >
+    <Stack alignItems="center" justifyContent="center" sx={{ minHeight: '70vh', width: '100%' }}>
       <Paper
-        elevation={7}
+        elevation={0}
         sx={{
-          borderRadius: '30px',
+          borderRadius: tokens.radius.lg,
           maxWidth: 670,
           width: '100%',
           px: { xs: 2, md: 5 },
-          py: { xs: 3, md: 6 },
+          py: { xs: 3, md: 5 },
           mt: 2,
-          bgcolor: 'rgba(255,255,255,0.93)',
-          backdropFilter: 'blur(8px)',
-          boxShadow: '0 12px 40px 0 #b7b6f222',
+          border: `1px solid ${tokens.line}`,
         }}
       >
         <Stack spacing={4} alignItems="center" width="100%">
           {/* Title */}
-          <Typography
-            variant="h4"
-            sx={{
-              fontWeight: 900,
-              background: 'linear-gradient(90deg,#667eea,#764ba2)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              textAlign: 'center',
-            }}
-            gutterBottom
-          >
+          <Typography variant="h4" sx={{ fontWeight: 800, textAlign: 'center' }} gutterBottom>
             Meeting summary
           </Typography>
 
@@ -101,22 +82,15 @@ const AppointmentSummary = ({
             alignItems="center"
             width="100%"
           >
-            <Typography
-              variant="h6"
-              sx={{
-                fontWeight: 700,
-                color: '#585777',
-                letterSpacing: '.01em',
-              }}
-            >
+            <Typography variant="h6" sx={{ fontWeight: 700, color: 'text.primary' }}>
               {selectedOption}
             </Typography>
             <Stack direction="row" alignItems="center" spacing={1}>
-              <CalendarMonthOutlinedIcon fontSize="small" sx={{ color: '#764ba2' }} />
+              <CalendarMonthOutlinedIcon fontSize="small" color="primary" />
               <Typography variant="body1">{selectedDate}</Typography>
             </Stack>
             <Stack direction="row" alignItems="center" spacing={1}>
-              <AccessTimeOutlinedIcon fontSize="small" sx={{ color: '#667eea' }} />
+              <AccessTimeOutlinedIcon fontSize="small" color="primary" />
               <Typography variant="body1">{selectedTime}</Typography>
             </Stack>
           </Stack>
@@ -133,11 +107,8 @@ const AppointmentSummary = ({
               error={!!errors.clientName}
               helperText={errors.clientName}
               InputProps={{
-                startAdornment: <PersonOutlinedIcon sx={{ mr: 1, color: '#764ba2' }} />,
-                sx: {
-                  bgcolor: '#f5f6fa',
-                  borderRadius: 2.5,
-                }
+                startAdornment: <PersonOutlinedIcon sx={{ mr: 1 }} color="primary" />,
+                sx: { bgcolor: tokens.fieldFill }
               }}
             />
             <TextField
@@ -151,11 +122,8 @@ const AppointmentSummary = ({
               error={!!errors.clientMail}
               helperText={errors.clientMail}
               InputProps={{
-                startAdornment: <EmailOutlinedIcon sx={{ mr: 1, color: '#667eea' }} />,
-                sx: {
-                  bgcolor: '#f5f6fa',
-                  borderRadius: 2.5,
-                }
+                startAdornment: <EmailOutlinedIcon sx={{ mr: 1 }} color="primary" />,
+                sx: { bgcolor: tokens.fieldFill },
               }}
             />
             <TextField
@@ -168,11 +136,8 @@ const AppointmentSummary = ({
               error={!!errors.clientPhone}
               helperText={errors.clientPhone}
               InputProps={{
-                startAdornment: <PhoneIphoneOutlinedIcon sx={{ mr: 1, color: '#764ba2' }} />,
-                sx: {
-                  bgcolor: '#f5f6fa',
-                  borderRadius: 2.5,
-                }
+                startAdornment: <PhoneIphoneOutlinedIcon sx={{ mr: 1 }} color="primary" />,
+                sx: { bgcolor: tokens.fieldFill },
               }}
             />
             <TextField
@@ -182,37 +147,17 @@ const AppointmentSummary = ({
               value={specialRequest}
               onChange={(e) => onSpecialRequestChange(e.target.value)}
               fullWidth
-              InputProps={{
-                sx: {
-                  bgcolor: '#f8f8fb',
-                  borderRadius: 2.5,
-                }
-              }}
+              InputProps={{ sx: { bgcolor: tokens.fieldFill } }}
             />
           </Stack>
 
           <Box textAlign="center">
             <Button
               variant="contained"
+              color="primary"
               size="large"
               onClick={handleSubmit}
-              sx={{
-                px: 6,
-                py: 1.3,
-                borderRadius: '30px',
-                fontWeight: 700,
-                fontSize: '1.09rem',
-                letterSpacing: '0.02em',
-                background: 'linear-gradient(90deg,#667eea,#764ba2)',
-                boxShadow: '0 4px 20px 0 #667eea22',
-                textTransform: 'none',
-                transition: 'all 0.18s',
-                '&:hover': {
-                  background: 'linear-gradient(90deg,#764ba2 60%,#667eea 100%)',
-                  boxShadow: '0 7px 28px #667eea36',
-                  transform: 'translateY(-1.5px) scale(1.025)',
-                }
-              }}
+              sx={{ px: 5, py: 1.25, minWidth: 200 }}
             >
               Approve
             </Button>

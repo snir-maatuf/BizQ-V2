@@ -4,6 +4,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
+import { tokens } from '../../theme';
 
 const ScheduleSection = ({ selectedDate, onDateSelect, workingDays }) => {
   // Make sure selectedDate is a Dayjs object
@@ -33,9 +34,9 @@ const ScheduleSection = ({ selectedDate, onDateSelect, workingDays }) => {
             sx={{
               height: '400px',
               '& .Mui-selected': {
-                backgroundColor: '#2196f3',
+                backgroundColor: `${tokens.green} !important`,
                 color: '#ffffff',
-              }, // Example: Customize selected date color
+              },
             }}
           />
         </LocalizationProvider>

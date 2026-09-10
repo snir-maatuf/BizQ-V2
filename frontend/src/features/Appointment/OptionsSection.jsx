@@ -48,7 +48,6 @@ const OptionsSection = ({ services, selectedTypeId, onTypeSelect }) => {
         alignItems: 'center',
         py: { xs: 3, md: 6 },
         px: 0,
-        background: 'linear-gradient(135deg, #f0f4ff 0%, #fef2f8 100%)',
         position: 'relative',
         overflow: 'hidden',
       }}
@@ -56,15 +55,7 @@ const OptionsSection = ({ services, selectedTypeId, onTypeSelect }) => {
       <Typography
         variant="h3"
         gutterBottom
-        sx={{
-          fontWeight: 800,
-          background: 'linear-gradient(90deg, #667eea 20%, #764ba2 85%)',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
-          letterSpacing: '.05em',
-          mb: 4,
-          textAlign: 'center',
-        }}
+        sx={{ fontWeight: 800, mb: 4, textAlign: 'center' }}
       >
         Menu
       </Typography>

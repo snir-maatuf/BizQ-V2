@@ -1,5 +1,8 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import theme from './theme';
 import NavBar from './features/Generics/NavBar';
 import SignUpPage from './pages/SignUpPage';
 import HomePage from './pages/HomePage';
@@ -19,17 +22,19 @@ function App() {
     getLocationByIP();
   }, []);
   return (
-    <Router>
-      <Background />
-      <div
-        className='app_page'
-        style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}
-      >
-        <NavBar />
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Router>
+        <Background />
         <div
-          className='pages_content'
-          style={{ flex: 1, overflowY: 'auto', marginTop: '10vh' }}
+          className='app_page'
+          style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}
         >
+          <NavBar />
+          <div
+            className='pages_content'
+            style={{ flex: 1, overflowY: 'auto', minHeight: 0 }}
+          >
           <Routes>
             <Route path='/' element={<HomePage />}/>
             <Route path='/Login' element={<LoginPage />}/>
@@ -42,10 +47,11 @@ function App() {
             <Route path='/FilterBusiness/all' element={<FilteredBusinessesPage/>}/>
             <Route path='/Appointment/:id' element={<AppointmentPage/>}/>
             <Route path='/CancelAppointment/:appointmentId' element={<CancelAppointment/>}/>
-          </Routes>
+            </Routes>
+          </div>
         </div>
-      </div>
-    </Router>
+      </Router>
+    </ThemeProvider>
   );
 }
 

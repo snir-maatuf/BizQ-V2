@@ -1,5 +1,6 @@
 # dependencies
 /node_modules
+node_modules/
 /.pnp
 .pnp.js
 
@@ -8,13 +9,19 @@
 
 # production
 /build
+dist/
 
-# misc
+# environment / secrets
+.env
+.env.*
+!.env.example
+firebase-admin-key.json
+
+# editor / OS
 .DS_Store
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-.vscode
+.vscode/
 jsconfig.json
-frontend/.env
+
+# local tooling (not part of the project)
+.claude/
+.impeccable/hook.cache.json

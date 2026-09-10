@@ -1,37 +1,41 @@
 import React from 'react';
-import { Stack } from '@mui/material';
+import { Box } from '@mui/material';
 
+/**
+ * Global page ground. Warm off-white with two very faint warm blooms —
+ * enough to keep the page from feeling flat, quiet enough to sit under any surface.
+ */
 export default function Background() {
   return (
-    <Stack
+    <Box
+      aria-hidden
       sx={{
-        backgroundColor: '#ffffff',
-        height: '100vh',
-        width: '100vw',
         position: 'fixed',
+        inset: 0,
         zIndex: -1,
         overflow: 'hidden',
+        backgroundColor: '#fbfaf6',
         '&::before': {
           content: '""',
           position: 'absolute',
-          top: '-20%',
-          left: '-20%',
-          width: '60%',
-          height: '60%',
-          background: 'linear-gradient(135deg, rgba(99,102,241,0.5), rgba(129,140,248,0.3))',
-          borderRadius: '50%',
-          filter: 'blur(100px)',
+          top: '-24%',
+          left: '-18%',
+          width: '55%',
+          height: '55%',
+          background:
+            'radial-gradient(circle, rgba(31,111,92,0.06), rgba(31,111,92,0) 70%)',
+          filter: 'blur(90px)',
         },
         '&::after': {
           content: '""',
           position: 'absolute',
-          bottom: '-15%',
-          right: '-10%',
+          bottom: '-20%',
+          right: '-14%',
           width: '50%',
           height: '50%',
-          background: 'linear-gradient(225deg, rgba(236,72,153,0.5), rgba(249,115,22,0.3))',
-          borderRadius: '50%',
-          filter: 'blur(100px)',
+          background:
+            'radial-gradient(circle, rgba(214,180,130,0.10), rgba(214,180,130,0) 70%)',
+          filter: 'blur(90px)',
         },
       }}
     />

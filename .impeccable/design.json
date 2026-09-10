@@ -1,0 +1,137 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-10T00:00:00Z",
+  "title": "Design System: BizQ",
+  "extensions": {
+    "colorMeta": {
+      "green": {
+        "role": "primary",
+        "displayName": "Trust Green",
+        "canonical": "#1f6f5c",
+        "tonalRamp": ["#0c2a23", "#12392f", "#18493d", "#1f6f5c", "#3f8f7c", "#6fb0a0", "#a6cfc4", "#dfeeea"]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "canonical": "#1e1b16",
+        "tonalRamp": ["#121019", "#1e1b16", "#3a352d", "#544e44", "#5f5d55", "#6b685f", "#a49e93", "#efece5"]
+      },
+      "ground": {
+        "role": "neutral",
+        "displayName": "Warm Ground",
+        "canonical": "#fbfaf6",
+        "tonalRamp": ["#2b2a25", "#43413a", "#5f5c52", "#807c70", "#a8a496", "#d0ccbe", "#f0eee6", "#fbfaf6"]
+      },
+      "field-fill": {
+        "role": "neutral",
+        "displayName": "Field Fill",
+        "canonical": "#f5f3ee",
+        "tonalRamp": ["#2b2a25", "#43413a", "#5f5c52", "#807c70", "#a8a496", "#d0ccbe", "#f5f3ee", "#fdfdfb"]
+      }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "The hero H1 only. Bricolage Grotesque 800, text-wrap: balance." },
+      "headline": { "displayName": "Headline", "purpose": "Section titles and the owner-band heading." },
+      "body": { "displayName": "Body", "purpose": "Hero subhead (Soft Ink), step descriptions, helper text." },
+      "label": { "displayName": "Label", "purpose": "The two uppercase search-field kickers only; nothing else is uppercase." }
+    },
+    "shadows": [
+      { "name": "search-lift", "value": "0 10px 30px rgba(31,111,92,0.08)", "purpose": "The one shadow — under the hero search bar, signalling the primary action." }
+    ],
+    "motion": [
+      { "name": "ease-out", "value": "cubic-bezier(0.22, 1, 0.36, 1)", "purpose": "The reveal and chip hover easing." },
+      { "name": "reveal", "value": "opacity+translateY 0.55s ease-out, whileInView once", "purpose": "One below-the-fold moment: How it works and the owner band settle in on entry. The hero never animates." },
+      { "name": "chip-hover", "value": "background/border/transform 0.18s ease", "purpose": "Category chip hover lift." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "600px" },
+      { "name": "md", "value": "900px" },
+      { "name": "lg", "value": "1200px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Solid green action button. Search, and every primary CTA.",
+      "html": "<button class=\"ds-btn\">Search</button>",
+      "css": ".ds-btn { display:inline-flex; align-items:center; gap:8px; padding:10px 20px; border:0; border-radius:12px; font:700 15px/1 'Figtree',-apple-system,sans-serif; color:#fff; background:#1f6f5c; cursor:pointer; transition:background .16s ease; } .ds-btn:hover { background:#185a4a; } .ds-btn:focus-visible { outline:2px solid #1f6f5c; outline-offset:2px; }"
+    },
+    {
+      "name": "Category Chip",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "Pill entry to a category. Keyboard-activatable.",
+      "html": "<button class=\"ds-chip\">Hair salons</button>",
+      "css": ".ds-chip { padding:7px 13px; border:1px solid #e8e4db; border-radius:999px; background:transparent; font:500 13px/1 'Figtree',-apple-system,sans-serif; color:#544e44; cursor:pointer; transition:background-color .18s ease, border-color .18s ease, transform .18s ease; } .ds-chip:hover { background:#e3f0ec; border-color:#cfe4dd; transform:translateY(-1px); } .ds-chip:focus-visible { outline:2px solid #1f6f5c; outline-offset:2px; }"
+    },
+    {
+      "name": "Hero Search Bar",
+      "kind": "custom",
+      "refersTo": "search-field",
+      "description": "The signature component. A white field group with two kicker-labelled cells and a green Search button; submits to the results page with q + city.",
+      "html": "<form class=\"ds-search\" role=\"search\"><label class=\"ds-search__cell\"><span>Service or business</span><input placeholder=\"Haircut, dentist, personal trainer…\"/></label><span class=\"ds-search__div\"></span><label class=\"ds-search__cell ds-search__cell--city\"><span>Where</span><input value=\"תל אביב\"/></label><button class=\"ds-search__btn\"><svg viewBox=\"0 0 24 24\" width=\"18\" height=\"18\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><circle cx=\"11\" cy=\"11\" r=\"7\"/><path d=\"m20 20-3.5-3.5\"/></svg>Search</button></form>",
+      "css": ".ds-search { display:flex; align-items:stretch; gap:6px; max-width:620px; padding:8px; border:1px solid #e8e4db; border-radius:16px; background:#fff; box-shadow:0 10px 30px rgba(31,111,92,0.08); } .ds-search__cell { flex:1; min-width:0; display:flex; flex-direction:column; justify-content:center; padding:8px 18px; font-family:'Figtree',-apple-system,sans-serif; } .ds-search__cell--city { flex-grow:.7; } .ds-search__cell span { font-size:10.5px; font-weight:600; letter-spacing:.09em; text-transform:uppercase; color:#97948a; } .ds-search__cell input { border:0; background:transparent; font-size:15px; color:#1e1b16; outline:none; margin-top:2px; } .ds-search__cell input::placeholder { color:#97948a; } .ds-search__div { width:1px; margin:6px 0; background:#e8e4db; } .ds-search__btn { display:inline-flex; align-items:center; gap:8px; flex-shrink:0; padding:0 24px; border:0; border-radius:12px; background:#1f6f5c; color:#fff; font:700 15px/1 'Figtree',sans-serif; cursor:pointer; } .ds-search__btn:hover { background:#185a4a; }"
+    },
+    {
+      "name": "Top Navigation",
+      "kind": "nav",
+      "refersTo": "nav",
+      "description": "Flat white fixed bar, one bottom hairline. Reads over both the new home ground and the older frosted pages by committing to neither.",
+      "html": "<nav class=\"ds-nav\"><span class=\"ds-nav__brand\">Biz<b>Q</b></span><span class=\"ds-nav__right\"><a class=\"ds-nav__link\">How it works</a><button class=\"ds-nav__ghost\">Business log in</button><button class=\"ds-nav__cta\">List your business</button></span></nav>",
+      "css": ".ds-nav { display:flex; align-items:center; justify-content:space-between; max-width:1200px; margin:0 auto; padding:0 24px; height:64px; background:#fff; border-bottom:1px solid #e8e4db; font-family:'Figtree',-apple-system,sans-serif; } .ds-nav__brand { font-family:'Bricolage Grotesque',sans-serif; font-weight:800; font-size:21px; letter-spacing:-.02em; color:#1e1b16; } .ds-nav__brand b { color:#1f6f5c; } .ds-nav__right { display:flex; align-items:center; gap:16px; } .ds-nav__link { font-size:14px; font-weight:600; color:#67655d; cursor:pointer; } .ds-nav__link:hover { color:#1e1b16; } .ds-nav__ghost { border:0; background:none; font:600 14px/1 inherit; color:#67655d; cursor:pointer; padding:8px; } .ds-nav__cta { border:0; border-radius:999px; padding:9px 20px; background:#1f6f5c; color:#fff; font:700 14px/1 inherit; cursor:pointer; } .ds-nav__cta:hover { background:#185a4a; }"
+    },
+    {
+      "name": "How-It-Works Step",
+      "kind": "custom",
+      "refersTo": null,
+      "description": "One numbered step. Green-tinted numeral, title, one line of muted description.",
+      "html": "<div class=\"ds-step\"><span class=\"ds-step__n\">1</span><div><b>Find</b><p>Search or pick a category near you.</p></div></div>",
+      "css": ".ds-step { display:flex; gap:12px; align-items:flex-start; font-family:'Figtree',-apple-system,sans-serif; } .ds-step__n { flex:none; width:26px; height:26px; border-radius:50%; display:grid; place-items:center; font-weight:700; font-size:13px; color:#1f6f5c; background:#e3f0ec; } .ds-step b { display:block; font-weight:700; font-size:15px; color:#1e1b16; margin-bottom:2px; } .ds-step p { margin:0; font-size:14px; color:#67655d; }"
+    },
+    {
+      "name": "Owner Band",
+      "kind": "card",
+      "refersTo": "owner-band",
+      "description": "Full-width ink panel pitching business registration.",
+      "html": "<div class=\"ds-owner\"><div><h3>Run a business that takes appointments?</h3><p>List it on BizQ, set your hours once, and let customers book the times you're open.</p></div><button class=\"ds-owner__cta\">List your business</button></div>",
+      "css": ".ds-owner { display:flex; align-items:center; justify-content:space-between; gap:24px; padding:36px 40px; border-radius:16px; background:#1e1b16; color:#fff; font-family:'Figtree',-apple-system,sans-serif; } .ds-owner h3 { margin:0 0 8px; font-family:'Bricolage Grotesque',sans-serif; font-weight:700; font-size:24px; letter-spacing:-.02em; } .ds-owner p { margin:0; font-size:14.5px; color:rgba(255,255,255,.72); max-width:46ch; } .ds-owner__cta { flex-shrink:0; border:0; border-radius:999px; padding:12px 28px; background:#fff; color:#1e1b16; font:700 15px/1 inherit; cursor:pointer; } .ds-owner__cta:hover { background:#efece3; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The High-Street Front Desk",
+    "overview": "BizQ's home page is a search-first utility landing page — the kind of surface people already know how to use from OpenTable, Fresha, or Booking. It states the offer in one line, puts a single prominent search bar at the centre of the hero, lays the five service categories directly beneath it as quick entries, and keeps 'how it works' one scroll down. It deliberately refuses the abstract concept-hero and the SaaS gradient-with-three-feature-cards template.\n\nThe surface is warm and plain-spoken. A near-white ground with a faint warmth (#fbfaf6), near-black ink, and exactly one accent — trust green #1f6f5c — which appears only on things the visitor can act on: the wordmark's Q, the Search button, primary CTAs, links, focus rings. Depth is minimal: one soft warm-neutral shadow under the search bar, hairline dividers elsewhere. Nothing glows.\n\nType does the identity work. Bricolage Grotesque carries the wordmark and every heading at heavy weight; Figtree carries all UI and body text. Hierarchy is a hard jump from 800-weight display to 400-weight body.",
+    "keyCharacteristics": [
+      "Search bar as the hero — the primary action is a field group, not a link",
+      "One trust-green accent, reserved for interactive and brand elements only",
+      "Warm off-white ground; faint warm blooms for atmosphere, never flat colour blocks",
+      "Bricolage Grotesque display against Figtree body; weight jump carries hierarchy",
+      "Rounded but restrained: 10–16px on surfaces, pill on chips and nav CTAs",
+      "One soft warm-neutral shadow (under the search bar); hairlines everywhere else",
+      "Motion is one below-the-fold reveal; the hero renders at rest and is usable at first paint"
+    ],
+    "rules": [
+      { "name": "The One-Accent Rule", "body": "Green appears only on interactive or brand elements — Search button, CTAs, links, focus, the wordmark Q. It never fills a heading, a body paragraph, a page region, or a static container.", "section": "colors" },
+      { "name": "The No-Glow Rule", "body": "Depth is a single soft shadow (0 10px 30px rgba(31,111,92,0.08), under the search bar only) plus 1px hairlines. No coloured halos, no shadow on every card.", "section": "elevation" },
+      { "name": "The Weight-Jump Rule", "body": "Hierarchy comes from jumping 800 to 400, not from 500–600 intermediates. The only uppercase text is the two search-field kicker labels.", "section": "typography" },
+      { "name": "The Flat-Nav Rule", "body": "The nav is opaque white with one bottom hairline. It reads correctly over the new home ground and over the older frosted downstream pages precisely because it commits to neither.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do keep green for interactive and brand elements only — the One-Accent Rule.",
+      "Do state what BizQ is in the first line, and make the primary action (search or a category) reachable without scrolling.",
+      "Do carry hierarchy with the 800 to 400 weight jump; reserve uppercase for the two search kicker labels.",
+      "Do separate with 1px hairlines and fill changes; keep the single soft shadow for the search bar alone.",
+      "Do render the hero at rest — readable and usable at first paint, no entrance animation.",
+      "Do keep buttons and labels sentence case."
+    ],
+    "donts": [
+      "Don't add a second accent colour, or fill a heading / region / container with green.",
+      "Don't put a shadow on every card, or any coloured glow.",
+      "Don't animate the hero, or park any above-the-fold element at opacity: 0.",
+      "Don't reintroduce the old violet gradient, frosted-glass panels, or backdrop-filter as decoration — that world was replaced.",
+      "Don't use a display face other than Bricolage Grotesque, or a body face other than Figtree.",
+      "Don't make a border thicker than 1px."
+    ]
+  }
+}

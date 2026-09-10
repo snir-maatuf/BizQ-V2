@@ -6,13 +6,13 @@ import {
   Button,
   CircularProgress,
   Paper,
-  Box,
   InputAdornment,
 } from '@mui/material';
 import FrostedBackground from '../features/Generics/FrostedBackground';
 import { authenticateUser } from '../api/LoginApi';
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import { tokens } from '../theme';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -37,119 +37,79 @@ const LoginPage = () => {
   };
 
   return (
-    <Stack
-      alignItems="center"
-      justifyContent="center"
-      sx={{
-        minHeight: '80vh',
-        width: '100%',
-        background: 'none', // gradient already on main bg
-      }}
-    >
-        <Paper
-          elevation={7}
-          sx={{
-            px: { xs: 3, sm: 7 },
-            py: { xs: 4, sm: 6 },
-            borderRadius: '24px',
-            maxWidth: 410,
-            width: '100%',
-            bgcolor: 'rgba(255,255,255,0.92)',
-            backdropFilter: 'blur(10px)',
-            boxShadow: '0 8px 30px #b7b6f229',
-          }}
-        >
-          <Stack spacing={4} alignItems="center">
-            <Typography
-              variant="h4"
-              sx={{
-                fontWeight: 800,
-                letterSpacing: '.03em',
-                background: 'linear-gradient(90deg,#667eea,#764ba2)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                mb: 1,
-                textAlign: 'center',
-              }}
-              gutterBottom
-            >
-              Business Owner Login
+    <Stack alignItems="center" justifyContent="center" sx={{ minHeight: '80vh', width: '100%' }}>
+      <Paper
+        elevation={0}
+        sx={{
+          px: { xs: 3, sm: 6 },
+          py: { xs: 4, sm: 6 },
+          borderRadius: tokens.radius.lg,
+          maxWidth: 420,
+          width: '100%',
+          border: `1px solid ${tokens.line}`,
+          boxShadow: '0 1px 2px rgba(20,18,12,0.04), 0 12px 32px rgba(20,18,12,0.06)',
+        }}
+      >
+        <Stack spacing={3.5}>
+          <Stack spacing={0.75}>
+            <Typography variant="h4" sx={{ fontSize: { xs: 24, sm: 28 } }}>
+              Business log in
             </Typography>
-
-            <form onSubmit={handleLogin} style={{ width: '100%' }}>
-              <Stack spacing={2.6}>
-                {/* Email */}
-                <TextField
-                  label="Email"
-                  variant="outlined"
-                  type="email"
-                  required
-                  value={email}
-                  fullWidth
-                  onChange={(e) => setEmail(e.target.value)}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <EmailOutlinedIcon color="primary" />
-                      </InputAdornment>
-                    ),
-                    sx: { bgcolor: '#f5f7fa', borderRadius: 2 },
-                  }}
-                />
-                {/* Password */}
-                <TextField
-                  label="Password"
-                  variant="outlined"
-                  type="password"
-                  required
-                  value={password}
-                  fullWidth
-                  onChange={(e) => setPassword(e.target.value)}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <LockOutlinedIcon color="primary" />
-                      </InputAdornment>
-                    ),
-                    sx: { bgcolor: '#f5f7fa', borderRadius: 2 },
-                  }}
-                />
-
-                {/* Log In Button */}
-                <Button
-                  variant="contained"
-                  type="submit"
-                  size="large"
-                  sx={{
-                    mt: 1,
-                    px: 0,
-                    borderRadius: '30px',
-                    fontWeight: 700,
-                    fontSize: '1.12rem',
-                    background: 'linear-gradient(90deg,#667eea,#764ba2)',
-                    boxShadow: '0 4px 18px 0 #667eea20',
-                    textTransform: 'none',
-                    transition: 'all 0.18s',
-                    '&:hover': {
-                      background: 'linear-gradient(90deg,#764ba2 65%,#667eea 100%)',
-                      boxShadow: '0 6px 24px #667eea26',
-                      transform: 'translateY(-1.5px) scale(1.025)',
-                    },
-                  }}
-                  fullWidth
-                  disabled={isLoading}
-                >
-                  {isLoading ? (
-                    <CircularProgress size={26} sx={{ color: 'white' }} />
-                  ) : (
-                    'Log In'
-                  )}
-                </Button>
-              </Stack>
-            </form>
+            <Typography sx={{ fontSize: 14.5, color: tokens.muted }}>
+              Sign in to manage your business and its calendar.
+            </Typography>
           </Stack>
-        </Paper>
 
+          <form onSubmit={handleLogin}>
+            <Stack spacing={2.5}>
+              <TextField
+                label="Email"
+                type="email"
+                required
+                fullWidth
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <EmailOutlinedIcon color="primary" />
+                    </InputAdornment>
+                  ),
+                  sx: { bgcolor: tokens.fieldFill },
+                }}
+              />
+              <TextField
+                label="Password"
+                type="password"
+                required
+                fullWidth
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <LockOutlinedIcon color="primary" />
+                    </InputAdornment>
+                  ),
+                  sx: { bgcolor: tokens.fieldFill },
+                }}
+              />
+
+              <Button
+                variant="contained"
+                color="primary"
+                type="submit"
+                size="large"
+                fullWidth
+                disabled={isLoading}
+                sx={{ mt: 0.5, py: 1.25, borderRadius: tokens.radius.md, fontSize: 15 }}
+              >
+                {isLoading ? <CircularProgress size={24} sx={{ color: '#fff' }} /> : 'Log in'}
+              </Button>
+            </Stack>
+          </form>
+        </Stack>
+      </Paper>
     </Stack>
   );
 };

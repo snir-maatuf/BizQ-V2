@@ -48,42 +48,8 @@ export default function BusinessOwnerPage({ userId }) {
     );
 
   return (
-    <Box
-      sx={{
-        position: 'relative',
-        minHeight: '100vh',
-        py: { xs: 4, md: 8 },
-        background: 'linear-gradient(135deg, #f0f4ff 0%, #fef2f8 100%)',
-        overflow: 'hidden',
-      }}
-    >
-      {/* Blobs for visual flair */}
-      <Box
-        sx={{
-          position: 'absolute',
-          top: { xs: '-10%', md: '-12%' },
-          left: { xs: '-12%', md: '-10%' },
-          width: { xs: 220, md: 340 },
-          height: { xs: 220, md: 340 },
-          background: 'radial-gradient(circle, #667eea55, transparent 70%)',
-          borderRadius: '50%',
-          zIndex: 0,
-        }}
-      />
-      <Box
-        sx={{
-          position: 'absolute',
-          bottom: { xs: '-10%', md: '-8%' },
-          right: { xs: '-12%', md: '-8%' },
-          width: { xs: 200, md: 320 },
-          height: { xs: 200, md: 320 },
-          background: 'radial-gradient(circle, #764ba255, transparent 70%)',
-          borderRadius: '50%',
-          zIndex: 0,
-        }}
-      />
-
-      <Stack alignItems="center" sx={{ position: 'relative', zIndex: 1 }} spacing={4}>
+    <Box sx={{ position: 'relative', minHeight: '100vh', py: { xs: 4, md: 8 } }}>
+      <Stack alignItems="center" spacing={4}>
         {!isAppointmentMode ? (
           <BusinessOwnerContainer>
             {/* Business Name */}
@@ -92,13 +58,9 @@ export default function BusinessOwnerPage({ userId }) {
               gutterBottom
               sx={{
                 fontWeight: 800,
-                fontSize: { xs: '2.1rem', md: '2.8rem' },
-                background: 'linear-gradient(90deg, #667eea 10%, #764ba2 80%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
+                fontSize: { xs: '2rem', md: '2.6rem' },
                 textAlign: 'center',
                 mb: 1,
-                letterSpacing: '.05em'
               }}
             >
               {data.businessName}
@@ -109,7 +71,7 @@ export default function BusinessOwnerPage({ userId }) {
               variant="body2"
               color="text.secondary"
               align="center"
-              sx={{ mb: 2, fontWeight: 500, fontSize: '1.07rem' }}
+              sx={{ mb: 2, fontWeight: 500, fontSize: '1rem' }}
             >
               {`${data.street} ${data.houseNumber}, ${data.city}`}
             </Typography>

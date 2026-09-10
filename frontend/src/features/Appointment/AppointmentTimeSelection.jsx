@@ -121,17 +121,14 @@ const AppointmentTimeSelection = ({
         {selectedDate}
       </Typography>
       {isLoading ? (
-        <CircularProgress sx={{ fontSize: '30px', color: 'black' }} />
+        <CircularProgress />
       ) : (
-        <Grid container spacing={2} justifyContent='center'>
+        <Grid container spacing={1.5} justifyContent='center'>
           {availableTimes.map((time) => (
             <Grid item key={time}>
               <Button
-                variant='contained'
-                style={{
-                  backgroundColor:
-                    selectedTime === time ? '#1976d2' : '#808080',
-                }}
+                variant={selectedTime === time ? 'contained' : 'outlined'}
+                color='primary'
                 onClick={() => onTimeSelect(time)}
               >
                 {time}
