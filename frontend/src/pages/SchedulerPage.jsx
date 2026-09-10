@@ -55,7 +55,6 @@ const SchedulerPage = () => {
                 position: 'absolute',
                 top: 8,
                 right: 8,
-                textTransform: 'none',
                 fontSize: '0.75rem',
               }}
               onClick={(e) => {
@@ -104,31 +103,15 @@ const SchedulerPage = () => {
       <FrostedBackground>
         {/* Edit Business Button */}
         <Button
+          variant="contained"
+          color="primary"
           disableElevation
           startIcon={<EditIcon />}
           endIcon={<ArrowForwardIcon />}
           onClick={() => navigate(`/signup/${isLoggedIn}`)}
-          sx={{
-            mt: 4,
-            px: 4,
-            py: 1.5,
-            borderRadius: '30px',
-            background: 'linear-gradient(90deg, #667eea 0%, #764ba2 100%)',
-            backgroundSize: '200% 200%',
-            color: '#fff',
-            textTransform: 'none',
-            fontSize: '1rem',
-            fontWeight: 500,
-            boxShadow: '0 4px 20px rgba(0,0,0,0.2)',
-            transition: 'all 0.3s ease',
-            '&:hover': {
-              backgroundPosition: '100% 0%',
-              transform: 'translateY(-2px)',
-              boxShadow: '0 6px 30px rgba(0,0,0,0.3)',
-            },
-          }}
+          sx={{ mt: 4, px: 3.5, py: 1.4, borderRadius: '999px' }}
         >
-          Edit Business
+          Edit business
         </Button>
 
         {/* Back to Month View */}
@@ -136,15 +119,10 @@ const SchedulerPage = () => {
           <Button
             onClick={() => setCurrentViewName('Month')}
             variant="outlined"
-            sx={{
-              position: 'absolute',
-              top: 16,
-              right: 24,
-              borderRadius: '20px',
-              textTransform: 'none',
-            }}
+            color="primary"
+            sx={{ position: 'absolute', top: 16, right: 24, borderRadius: 999 }}
           >
-            Monthly View
+            Monthly view
           </Button>
         )}
 

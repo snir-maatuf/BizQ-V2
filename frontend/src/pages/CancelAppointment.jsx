@@ -53,10 +53,7 @@ const CancelAppointment = () => {
             Appointment:
           </Typography>
           {isLoading ? (
-            <CircularProgress
-              sx={{ color: 'black' }}
-              size={'24px'}
-            ></CircularProgress>
+            <CircularProgress size={'24px'} />
           ) : (
             <Stack
               sx={{ direction: 'rtl', alignItems: 'start', width: '100%' }}

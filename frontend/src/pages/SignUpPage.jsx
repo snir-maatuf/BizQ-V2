@@ -225,31 +225,16 @@ const SignUpPage = () => {
 
   // Main layout
   return (
-    <Stack spacing={2} alignItems="center" sx={{ py: 5, minHeight: '97vh', px: 1 }}>
+    <Stack spacing={2} alignItems="center" sx={{ py: { xs: 3, md: 5 }, minHeight: '90vh', px: 1 }}>
       <FrostedBackground>
-        <Box
-          sx={{
-            width: '100%',
-            maxWidth: 640,
-            mx: 'auto',
-            borderRadius: 5,
-            background: 'rgba(252,252,255,0.98)',
-            boxShadow: '0 6px 48px 0 #cdc3ff33',
-            p: { xs: 2, sm: 4, md: 5 },
-            position: 'relative',
-            overflow: 'hidden',
-          }}
-        >
+        <Box sx={{ width: '100%', maxWidth: 640, mx: 'auto', p: { xs: 0.5, sm: 1 } }}>
           <Stack spacing={4}>
             <Typography
               variant="h3"
               sx={{
-                fontWeight: 900,
+                fontWeight: 800,
                 textAlign: 'center',
-                background: 'linear-gradient(90deg,#667eea,#764ba2)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                fontSize: { xs: '2rem', sm: '2.5rem' }
+                fontSize: { xs: '1.9rem', sm: '2.3rem' },
               }}
             >
               {userId ? 'Edit business' : 'Create business'}
@@ -260,9 +245,6 @@ const SignUpPage = () => {
               <>
                 <Typography variant="h5" sx={{
                   fontWeight: 700,
-                  background: 'linear-gradient(90deg,#667eea,#764ba2)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
                 }}>Personal details</Typography>
                 <Divider sx={{ mb: 2 }} />
                 <Stack spacing={2}>
@@ -322,9 +304,6 @@ const SignUpPage = () => {
             {/* BUSINESS DETAILS */}
             <Typography variant="h5" sx={{
               fontWeight: 700,
-              background: 'linear-gradient(90deg,#667eea,#764ba2)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
             }}>Business details</Typography>
             <Divider sx={{ mb: 2 }} />
             <Stack spacing={2}>
@@ -391,9 +370,6 @@ const SignUpPage = () => {
             {/* BUSINESS HOURS */}
             <Typography variant="h5" sx={{
               fontWeight: 700,
-              background: 'linear-gradient(90deg,#667eea,#764ba2)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
             }}>Business hours</Typography>
             <Divider sx={{ mb: 2 }} />
             <Stack spacing={2} alignItems="center">
@@ -432,9 +408,6 @@ const SignUpPage = () => {
             {/* SERVICES */}
             <Typography variant="h5" sx={{
               fontWeight: 700,
-              background: 'linear-gradient(90deg,#667eea,#764ba2)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
             }}>Services</Typography>
             <Divider sx={{ mb: 2 }} />
             <Stack spacing={2}>
@@ -474,17 +447,9 @@ const SignUpPage = () => {
               <Button
                 startIcon={<AddCircleIcon />}
                 onClick={addService}
-                variant="contained"
-                sx={{
-                  background: 'linear-gradient(90deg,#667eea,#764ba2)',
-                  color: '#fff',
-                  fontWeight: 700,
-                  px: 4,
-                  borderRadius: 3,
-                  '&:hover': {
-                    background: 'linear-gradient(90deg,#764ba2 50%,#667eea 100%)',
-                  }
-                }}
+                variant="outlined"
+                color="primary"
+                sx={{ alignSelf: 'flex-start', px: 3 }}
               >
                 Add service
               </Button>
@@ -496,26 +461,14 @@ const SignUpPage = () => {
                 <Alert
                   severity={alertSeverity}
                   variant="filled"
-                  icon={alertSeverity === 'success' ? <span role="img" aria-label="success">🎉</span> : <span role="img" aria-label="error">⚠️</span>}
                   sx={{
-                    mb: 0,
                     width: 350,
                     maxWidth: '95vw',
-                    boxShadow: '0 4px 24px 0 #764ba222',
-                    borderRadius: 3,
-                    fontSize: '1.12rem',
-                    fontWeight: 600,
-                    letterSpacing: '0.01em',
-                    justifyContent: 'center',
+                    borderRadius: 2,
+                    fontSize: '0.95rem',
+                    fontWeight: 500,
                     alignItems: 'center',
-                    textAlign: 'center',
-                    background:
-                      alertSeverity === 'success'
-                        ? 'linear-gradient(90deg,#96e6a1 0%,#d4fc79 100%)'
-                        : 'linear-gradient(90deg,#ffd6e0 0%,#cbb4d4 100%)',
-                    color: '#222',
-                    transition: 'all 0.4s cubic-bezier(.5,0,.2,1)',
-                    animation: alertOpen ? 'fadeInAlert 0.55s' : 'none'
+                    animation: alertOpen ? 'fadeInAlert 0.4s' : 'none',
                   }}
                   onClose={() => setAlertOpen(false)}
                 >
@@ -544,17 +497,9 @@ const SignUpPage = () => {
 
               <Button
                 variant="contained"
+                color="primary"
                 size="large"
-                sx={{
-                  width: 230, borderRadius: '30px', py: 1.3, fontWeight: 800,
-                  fontSize: '1.13rem', background: 'linear-gradient(90deg,#667eea,#764ba2)',
-                  boxShadow: '0 7px 28px #667eea26', textTransform: 'none', letterSpacing: '0.03em',
-                  '&:hover': {
-                    background: 'linear-gradient(90deg,#764ba2 60%,#667eea 100%)',
-                    boxShadow: '0 12px 34px #764ba236',
-                    transform: 'scale(1.025)',
-                  }
-                }}
+                sx={{ minWidth: 220, py: 1.25, fontSize: '1rem' }}
                 onClick={() => (userId ? handleUpdate() : handleRegister())}
                 disabled={isLoading}
               >

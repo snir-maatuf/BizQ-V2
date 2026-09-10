@@ -1,118 +1,138 @@
-import React from 'react';
-import { Button, Typography, Stack, Box } from '@mui/material';
-import FrostedBackground from '../features/Generics/FrostedBackground';
-import { TOPICS } from '../features/HomePage/data';
-import TopicCube from '../features/HomePage/TopicCube';
+import React, { useEffect, useMemo, useState } from 'react';
+import { Box, Typography, Stack, Chip } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { TOPICS } from '../features/HomePage/data';
+import SearchBar from '../features/HomePage/SearchBar';
+import HowItWorks from '../features/HomePage/HowItWorks';
+import OwnerCta from '../features/HomePage/OwnerCta';
+import SiteFooter from '../features/HomePage/SiteFooter';
+import { getLocationByIP } from '../api/Location';
+import { getBusinessCount } from '../api/Businesses';
+import { tokens } from '../theme';
+
+const COUNT_THRESHOLD = 12;
 
 export default function HomePage() {
   const navigate = useNavigate();
-  const handleCategoryClick = (categoryId) => navigate(`/FilterBusiness/${categoryId}`);
-  const handleShowAllClick = () => navigate(`/FilterBusiness/all`);
+
+  const [city, setCity] = useState(() => localStorage.getItem('currentCity') || '');
+  const [count, setCount] = useState(null);
+
+  useEffect(() => {
+    let alive = true;
+    getLocationByIP().then((loc) => {
+      if (alive && loc?.city) setCity(loc.city);
+    });
+    getBusinessCount().then((n) => {
+      if (alive) setCount(n);
+    });
+    return () => {
+      alive = false;
+    };
+  }, []);
+
+  const trustLine = useMemo(() => {
+    const where = city ? `near ${city}` : 'near you';
+    if (typeof count === 'number' && count >= COUNT_THRESHOLD) {
+      return `${count.toLocaleString()} businesses taking bookings ${where}`;
+    }
+    return `Businesses taking bookings ${where}`;
+  }, [count, city]);
+
+  const goCategory = (name) => {
+    const qs = city ? `?city=${encodeURIComponent(city)}` : '';
+    navigate(`/FilterBusiness/${encodeURIComponent(name)}${qs}`);
+  };
 
   return (
-    <Stack alignItems="center" sx={{ height: '80vh', overflowY: 'hidden', position: 'relative' }}>
-      <FrostedBackground>
-        <Box sx={{ pt: 8, textAlign: 'center' }}>
-          {/* Main Title */}
-          <Typography
-            variant="h1"
-            gutterBottom
-            sx={{
-              fontSize: { xs: '3rem', md: '4.5rem' },
-              fontWeight: 800,
-              background: 'linear-gradient(90deg, #667eea, #764ba2)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              letterSpacing: '0.1em',
-              lineHeight: 1.1,
-            }}
-          >
-            BizQ
-          </Typography>
+    <Box sx={{ minHeight: '100%', display: 'flex', flexDirection: 'column' }}>
+      {/* Hero - grows to fill and centres its own readable column */}
+      <Box
+        sx={{
+          flexGrow: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          textAlign: 'center',
+          px: { xs: 2.5, sm: 3 },
+          py: { xs: 3, md: 2 },
+        }}
+      >
+        <Box sx={{ maxWidth: 640, width: '100%' }}>
+            <Typography
+              variant="h1"
+              sx={{
+                fontSize: { xs: '2.05rem', sm: '2.5rem', md: '2.8rem' },
+                mb: 1.25,
+                textWrap: 'balance',
+              }}
+            >
+              Book a local business near you.
+            </Typography>
 
-          {/* Subtitle */}
-          <Typography
-            variant="h4"
-            gutterBottom
-            sx={{
-              fontSize: { xs: '1.25rem', md: '1.75rem' },
-              fontWeight: 500,
-              color: '#333',
-              mb: 1,
-            }}
-          >
-            Smart scheduling platform
-          </Typography>
+            <Typography
+              sx={{
+                fontSize: { xs: 15, md: 15.5 },
+                color: tokens.inkSoft,
+                maxWidth: '44ch',
+                mx: 'auto',
+                mb: { xs: 2.25, md: 2.5 },
+              }}
+            >
+              Barbers, clinics, studios and tutors - find one nearby and grab a time.
+              No phone calls, no account needed.
+            </Typography>
 
-          {/* Tagline */}
-          <Typography
-            variant="subtitle1"
-            sx={{
-              fontSize: { xs: '1rem', md: '1.25rem' },
-              fontWeight: 400,
-              color: '#666',
-              mb: 4,
-            }}
-          >
-            Connecting businesses and customers in one simple solution
-          </Typography>
+            <SearchBar defaultCity={city} />
+
+            <Stack
+              direction="row"
+              spacing={1}
+              useFlexGap
+              flexWrap="wrap"
+              justifyContent="center"
+              sx={{ mt: 2 }}
+            >
+              {TOPICS.map((t) => (
+                <Chip
+                  key={t.id}
+                  label={t.name}
+                  onClick={() => goCategory(t.name)}
+                  clickable
+                  variant="outlined"
+                  sx={{
+                    borderColor: tokens.line,
+                    color: tokens.inkSoft,
+                    fontSize: 13,
+                    fontWeight: 500,
+                    px: 0.5,
+                    transition: 'background-color .18s ease, border-color .18s ease, transform .18s ease',
+                    '&:hover': {
+                      backgroundColor: tokens.greenSoft,
+                      borderColor: '#cfe4dd',
+                      transform: 'translateY(-1px)',
+                    },
+                  }}
+                />
+              ))}
+            </Stack>
+
+          <Typography sx={{ mt: 1.5, fontSize: 12.5, color: tokens.faint }}>{trustLine}</Typography>
         </Box>
+      </Box>
 
-        {/* Topic Cubes */}
-        <Stack
-          direction="row"
-          spacing={4}
-          justifyContent="center"
-          alignItems="center"
-          sx={{ width: '100%', height: '100%' }}
-        >
-          {TOPICS.map((topic) => (
-            <TopicCube
-              key={topic.id}
-              topicObj={topic}
-              onClick={() => handleCategoryClick(topic.id)}
-            />
-          ))}
-        </Stack>
-
-        {/* Show All Button */}
-        <Button
-          onClick={handleShowAllClick}
-          endIcon={<ArrowForwardIcon sx={{ transition: 'transform 0.3s' }} />}
-          disableElevation
-          sx={{
-            position: 'relative',
-            px: 5,
-            py: 1.75,
-            mt: 6,
-            borderRadius: '50px',
-            background: 'linear-gradient(270deg, #667eea, #764ba2, #6b46c1)',
-            backgroundSize: '600% 600%',
-            animation: 'gradientShift 8s ease infinite',
-            color: '#ffffff',
-            fontSize: '1.125rem',
-            fontWeight: 500,
-            textTransform: 'none',
-            boxShadow: '0 6px 20px rgba(0,0,0,0.2)',
-            transition: 'all 0.3s ease',
-            '&:hover': {
-              animation: 'gradientShift 8s ease infinite reverse',
-              boxShadow: '0 8px 30px rgba(0,0,0,0.3)',
-              transform: 'translateY(-3px)',
-              '& .MuiSvgIcon-root': { transform: 'translateX(4px)' },
-            },
-            '@keyframes gradientShift': {
-              '0%': { backgroundPosition: '0% 50%' },
-              '50%': { backgroundPosition: '100% 50%' },
-              '100%': { backgroundPosition: '0% 50%' },
-            },
-          }}
-        >
-          Show All
-        </Button>
-      </FrostedBackground>
-    </Stack>
+      {/* Band - anchored to the bottom of the first screen */}
+      <Box sx={{ flexShrink: 0 }}>
+        <Box sx={{ px: { xs: 2.5, sm: 4, md: 6 } }}>
+          <Stack spacing={{ xs: 2, md: 2.25 }} sx={{ maxWidth: 1200, mx: 'auto', pb: 2 }}>
+            <HowItWorks />
+            <OwnerCta />
+          </Stack>
+        </Box>
+        {/* Footer spans the full width, like the top nav */}
+        <SiteFooter city={city} />
+      </Box>
+    </Box>
   );
 }

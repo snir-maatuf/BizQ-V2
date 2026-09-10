@@ -1,0 +1,18 @@
+# The app lives in frontend/. Build it there and publish its Vite output.
+# This overrides the site's dashboard build settings (which had no base
+# directory and ran `vite build` from the repo root — "vite: command not found").
+
+[build]
+  base = "frontend"
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+  NPM_FLAGS = "--legacy-peer-deps"
+
+# Single-page app: every route is served by index.html.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { db } from '../firebase';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import {
@@ -15,21 +15,24 @@ import FrostedBackground from '../features/Generics/FrostedBackground';
 import SearchIcon from '@mui/icons-material/Search';
 import { getLocationByIP } from '../api/Location';
 import { isHebrew } from '../utils/common';
+import { tokens } from '../theme';
 
 const FilteredBusinessesPage = () => {
   const { category } = useParams();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   const [businesses, setBusinesses] = useState([]);
   const [filteredBusinesses, setFilteredBusinesses] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
+  // pre-filled from the home search bar: /FilterBusiness/all?q=…&city=…
+  const [searchTerm, setSearchTerm] = useState(() => searchParams.get('q') || '');
 
   // עיר של המשתמש (מזוהה אוטומטית)
   const [userCity, setUserCity] = useState('');
   const [cityFilterActive, setCityFilterActive] = useState(false);
   const [userCityText, setUserCityText] = useState('');
-  const [manualCity, setManualCity] = useState('');
+  const [manualCity, setManualCity] = useState(() => searchParams.get('city') || '');
 
   useEffect(() => {
     const fetchLocationAndBusinesses = async () => {
@@ -147,110 +150,102 @@ const FilteredBusinessesPage = () => {
     );
 
   return (
-    <Stack alignItems="center" sx={{ height: '80vh' }}>
+    <Stack alignItems="center" sx={{ minHeight: '80vh', py: { xs: 3, md: 5 } }}>
       <FrostedBackground>
-        <Stack spacing={3}>
+        <Stack spacing={2.5} sx={{ width: '100%', maxWidth: 760, flexGrow: 1 }}>
           {/* כפתור הפעלת סינון לעיר שלי */}
           {userCity && (
-            <Stack direction="row" spacing={2} alignItems="center" justifyContent="center">
-              <Typography>
+            <Stack direction="row" spacing={1.5} alignItems="center" justifyContent="center">
+              <Typography sx={{ fontSize: 14, color: tokens.muted }}>
                 {cityFilterActive
                   ? `מציג תוצאות לעיר שלך: ${userCity}`
                   : `ניתן לסנן לעיר שלך: ${userCity}`}
               </Typography>
               <IconButton
                 onClick={handleCityFilterToggle}
-                color={cityFilterActive ? "primary" : "default"}
+                color={cityFilterActive ? 'primary' : 'default'}
                 aria-label="סנן לפי העיר שלי"
+                size="small"
               >
-                <SearchIcon />
+                <SearchIcon fontSize="small" />
               </IconButton>
             </Stack>
           )}
 
           {/* שדה חיפוש + שדה עיר ידני */}
           <Stack
-            direction="row"
-            alignItems="center"
-            spacing={2}
+            direction={{ xs: 'column', sm: 'row' }}
+            alignItems="stretch"
+            spacing={1}
             sx={{
-              backgroundColor: 'white',
-              borderRadius: '20px',
-              padding: '10px',
-              boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)',
-              marginBottom: '20px',
+              backgroundColor: tokens.paper,
+              borderRadius: tokens.radius.lg,
+              border: `1px solid ${tokens.line}`,
+              padding: '8px',
             }}
           >
             <TextField
               fullWidth
+              size="small"
               placeholder="חפש לפי שם או תיאור"
               value={searchTerm}
               onChange={handleSearch}
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  borderRadius: '20px',
-                },
-              }}
+              sx={{ '& .MuiOutlinedInput-root': { bgcolor: tokens.fieldFill } }}
             />
-
-            {/* שדה עיר ידני */}
             <TextField
               fullWidth
+              size="small"
               placeholder="הכנס עיר"
               value={manualCity}
               onChange={handleLocationInput}
-              disabled={cityFilterActive} // מנטרלים אם הסינון לעיר שלי פעיל
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  borderRadius: '20px',
-                },
-              }}
+              disabled={cityFilterActive}
+              sx={{ '& .MuiOutlinedInput-root': { bgcolor: tokens.fieldFill } }}
             />
-            <IconButton>
-              <SearchIcon />
-            </IconButton>
           </Stack>
 
           {/* רשימת העסקים */}
           <Stack
             sx={{
-              width: '1000px',
+              width: '100%',
               overflowY: 'auto',
-              height: '50vh',
-              paddingBottom: '5px',
+              maxHeight: '52vh',
+              pr: 0.5,
             }}
           >
-            <Stack spacing={3}>
+            <Stack spacing={1.5}>
               {filteredBusinesses.length > 0 ? (
                 filteredBusinesses.map((business) => (
                   <Card
                     key={business.id}
                     onClick={() => navigateToBusiness(business.id)}
+                    elevation={0}
                     sx={{
-                      borderRadius: '15px',
-                      boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)',
+                      borderRadius: tokens.radius.md,
+                      border: `1px solid ${tokens.line}`,
                       cursor: 'pointer',
+                      transition: 'border-color .16s ease, background-color .16s ease',
                       '&:hover': {
-                        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+                        borderColor: '#cfe4dd',
+                        backgroundColor: tokens.greenSoft,
                       },
                     }}
                   >
-                    <CardContent>
+                    <CardContent sx={{ '&:last-child': { pb: 2 } }}>
                       <Typography
                         variant="h6"
                         sx={{
-                          direction: isHebrew(business?.businessName)
-                            ? 'rtl'
-                            : 'ltr',
+                          fontSize: 17,
+                          direction: isHebrew(business?.businessName) ? 'rtl' : 'ltr',
                         }}
                       >
                         {business.businessName}
                       </Typography>
                       <Typography
                         sx={{
-                          direction: isHebrew(business?.description)
-                            ? 'rtl'
-                            : 'ltr',
+                          mt: 0.5,
+                          fontSize: 14,
+                          color: tokens.muted,
+                          direction: isHebrew(business?.description) ? 'rtl' : 'ltr',
                           display: '-webkit-box',
                           WebkitBoxOrient: 'vertical',
                           overflow: 'hidden',
@@ -260,14 +255,14 @@ const FilteredBusinessesPage = () => {
                       >
                         {business.description || 'No description available.'}
                       </Typography>
-                      <Typography>{`City: ${
-                        business.city || 'N/A'
-                      }`}</Typography>
+                      <Typography sx={{ mt: 0.75, fontSize: 12.5, color: tokens.faint }}>
+                        {`City: ${business.city || 'N/A'}`}
+                      </Typography>
                     </CardContent>
                   </Card>
                 ))
               ) : (
-                <Typography variant="body1" align="center">
+                <Typography sx={{ fontSize: 15, color: tokens.muted, textAlign: 'center', py: 4 }}>
                   לא נמצאו עסקים מתאימים.
                 </Typography>
               )}
