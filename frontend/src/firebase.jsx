@@ -11,7 +11,24 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-export const auth = getAuth(app);
-export const db = getFirestore(app);
+// Never let a missing/invalid Firebase config white-screen the whole app.
+// Without the VITE_FIREBASE_* env vars, auth and business data are unavailable
+// but the rest of the site still renders.
+let auth = null;
+let db = null;
+
+if (firebaseConfig.apiKey) {
+  try {
+    const app = initializeApp(firebaseConfig);
+    auth = getAuth(app);
+    db = getFirestore(app);
+  } catch (err) {
+    console.error('Firebase initialisation failed:', err);
+  }
+} else {
+  console.warn(
+    'Firebase is not configured (missing VITE_FIREBASE_* env vars) — auth and business data are disabled.'
+  );
+}
+
+export { auth, db };
